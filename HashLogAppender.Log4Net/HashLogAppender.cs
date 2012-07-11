@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 
 namespace HashLogAppender.Log4Net
 {
-    public class HasLogAppender : AppenderSkeleton
+    public class HashLogAppender : AppenderSkeleton
     {
         protected override void Append(log4net.Core.LoggingEvent loggingEvent)
         {
@@ -23,7 +23,7 @@ namespace HashLogAppender.Log4Net
             var bigHash = Hash.GetHash(hashMessage, Hash.HashType.SHA256);
 
             var connection = new SqlConnection();
-            connection.ConnectionString = "server=localhost;database=AdventureWorks; uid=sa;pwd=test;";
+            connection.ConnectionString = ConnectionString;
             connection.Open();
             var cmd = new SqlCommand("AddHashLog", connection);
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
@@ -36,5 +36,7 @@ namespace HashLogAppender.Log4Net
             cmd.ExecuteNonQuery();
             connection.Close();
         }
+
+        public string ConnectionString { get; set; }
     }
 }
